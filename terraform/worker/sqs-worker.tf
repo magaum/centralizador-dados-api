@@ -1,18 +1,28 @@
-module "sqs_worker" {
-  source = "terraform-aws-modules/lambda/aws"
+resource "aws_lambda_permission" "allow_sqs" {
+  statement_id  = "AllowExecutionFromSQS"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.sqs_worker.arn
+  principal     = "sqs.amazonaws.com"
+  source_arn    = var.sqs_arn
+}
 
-  function_name                 = "sqs-worker"
-  description                   = "Salva dados recebidos do SQS no opensearch"
-  attach_cloudwatch_logs_policy = true
-  create_package                = false
-  package_type                  = "Image"
-
-  image_uri = "132367819851.dkr.ecr.eu-west-1.amazonaws.com/complete-cow:1.0"
-
-  allowed_triggers = {
-    SQSMessage = {
-      service    = "sqs"
-      source_arn = var.sqs_arn
+resource "aws_lambda_function" "sqs_worker" {
+  description    = "Gerencia nova mensagem recebida do sistema produto"
+  function_name  = "sqs-worker"
+  role           = aws_iam_role.sqs_worker_role.arn
+  package_type   = "Image"
+  image_uri      = "${var.ecr_sqs_url}:latest"
+  
+  environment {
+    variables = {
+      Environment = var.env
     }
   }
+}
+
+resource "aws_lambda_event_source_mapping" "sqs_worker" {
+  event_source_arn = var.sqs_arn
+  function_name    = aws_lambda_function.sqs_worker.arn
+  batch_size       = 1
+  enabled          = true
 }

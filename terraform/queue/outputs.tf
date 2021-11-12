@@ -1,4 +1,4 @@
-output "arn" {
+output "queue_produtos_arn" {
   value = aws_sqs_queue.produtos_api.arn
 }
 

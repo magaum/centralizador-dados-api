@@ -2,23 +2,14 @@ variable "desired_ecs_instances" {
   default = 2
 }
 
-variable "lb_target_group_arn" {
-}
+variable "lb_target_group_arn" {}
 
-variable "vpc_id" {
-  
-}
+variable "vpc_id" {}
 
-variable "public_subnets" {
+variable "public_subnets" {}
 
-}
+variable "region" {}
 
-variable "region" {
+variable "azs" {}
 
-}
-
-variable "azs" {
-}
-
-variable "env" {
-}
+variable "env" {}

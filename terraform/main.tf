@@ -59,11 +59,28 @@ module "queue" {
   bucket_arn = module.storage.arn
 }
 
+module "container_hub" {
+  source = "./ecr"
+
+  region = var.region
+}
+
 module "worker" {
   source = "./worker"
 
-  sqs_arn = module.queue.arn
+  sqs_arn = module.queue.queue_produtos_arn
   s3_arn  = module.storage.arn
+  bucket_id  = module.storage.id
+  ecr_s3_url = module.container_hub.s3_url
+  ecr_sqs_url = module.container_hub.sqs_url
+  region = var.region
+  env = var.env
+
+  depends_on = [
+    module.container_hub,
+    module.queue,
+    module.storage
+  ]
 }
 
 module "database" {

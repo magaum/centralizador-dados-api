@@ -3,7 +3,7 @@ resource "aws_glue_classifier" "produto_mainframe" {
 
   grok_classifier {
     classification  = "produto_mainframe"
-    grok_pattern    = "{fields}"
+    grok_pattern    = "fields"
     custom_patterns = "fields (?<fields>[^.].*)"
   }
 }
@@ -20,7 +20,7 @@ resource "aws_glue_crawler" "s3" {
   classifiers   = [aws_glue_classifier.produto_mainframe.id]
 
   s3_target {
-    path = "${var.bucket_name}/raw"
+    path = "${var.bucket_name}/processed"
     event_queue_arn = var.queue_arn
   }
 }
@@ -32,9 +32,9 @@ resource "aws_glue_job" "extract_mainframe_data" {
   default_arguments = {
     "--job-language" = "python"
   }
-
+  
   command {
-    script_location = "${var.bucket_name}/mainframe-data-job.py"
+    script_location = "s3://${var.bucket_name}/mainframe-data-job.py"
   }
 }
 

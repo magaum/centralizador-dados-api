@@ -1,4 +1,3 @@
-
 resource "aws_iam_role" "glue_role" {
   name               = "GlueWriteAccessRole"
   assume_role_policy = <<EOF
@@ -18,8 +17,8 @@ resource "aws_iam_role" "glue_role" {
 EOF
 }
 
-resource "aws_iam_role_policy" "s3_write_role" {
-  name = "my_s3_policy"
+resource "aws_iam_role_policy" "s3_write_policy" {
+  name = "s3_write_policy"
   role = aws_iam_role.glue_role.id
   policy = <<EOF
 {
@@ -28,20 +27,20 @@ resource "aws_iam_role_policy" "s3_write_role" {
     {
         "Effect": "Allow",
         "Action": [
-            "glue:*",
+            "glue:*"
         ],
         "Resource": [
             "*"
         ]
     },
    {
-        "Effect": "Allow"
+        "Effect": "Allow",
         "Action": [
             "s3:GetObject",
             "s3:PutObject"
         ],
         "Resource": [
-            ${var.bucket_arn}
+            "${var.bucket_arn}"
         ]
    }
   ]

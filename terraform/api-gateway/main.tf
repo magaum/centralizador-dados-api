@@ -17,7 +17,7 @@ resource "aws_api_gateway_deployment" "produtos_api" {
     redeployment = sha1(jsonencode([
       aws_api_gateway_resource.produtos_api.id,
       aws_api_gateway_method.produtos_api.id,
-      aws_api_gateway_integration.produtos_api.id,
+      aws_api_gateway_integration.produtos_api.id
     ]))
   }
 
@@ -35,9 +35,8 @@ resource "aws_api_gateway_stage" "produtos_api" {
 resource "aws_api_gateway_resource" "produtos_api" {
   rest_api_id = aws_api_gateway_rest_api.produtos_api.id
   parent_id   = aws_api_gateway_rest_api.produtos_api.root_resource_id
-  path_part   = "health"
+  path_part   = "produtos"
 }
-
 
 resource "aws_api_gateway_method" "produtos_api" {
   rest_api_id   = aws_api_gateway_rest_api.produtos_api.id
@@ -57,11 +56,7 @@ resource "aws_api_gateway_integration" "produtos_api" {
   rest_api_id             = aws_api_gateway_rest_api.produtos_api.id
   type                    = "HTTP_PROXY"
   timeout_milliseconds    = 29000
-  uri                     = "http://${var.lb_dns_name}-${var.env}/health"
-
-  # request_parameters = {
-  #   "integration.request.path.username" = "method.request.path.username"
-  # }
+  uri                     = "http://${var.lb_dns_name}"
 
   depends_on = [
     aws_api_gateway_method.produtos_api
@@ -76,6 +71,7 @@ resource "aws_api_gateway_method_settings" "produtos_api" {
 
   settings {
     metrics_enabled = true
+    # caching_enabled = false
     logging_level   = "INFO"
   }
 }

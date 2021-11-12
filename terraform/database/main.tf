@@ -8,7 +8,7 @@ resource "aws_elasticsearch_domain" "es" {
   elasticsearch_version = "7.10"
 
   cluster_config {
-    instance_type          = "m2.small.elasticsearch"
+    instance_type          = "t2.small.elasticsearch"
     zone_awareness_enabled = false
     # zone_awareness_config {
     #   availability_zone_count = 1
@@ -16,13 +16,19 @@ resource "aws_elasticsearch_domain" "es" {
   }
 
   vpc_options {
-    subnet_ids = var.private_subnets_ids
+    subnet_ids = [var.private_subnets_ids[0]]
 
     security_group_ids = [aws_security_group.es.id]
   }
 
   advanced_options = {
     "rest.action.multi.allow_explicit_index" = "true"
+  }
+
+  ebs_options {
+    ebs_enabled = true
+    volume_size = 10
+    volume_type = "gp2" //gereral purpose
   }
 
   access_policies = <<CONFIG

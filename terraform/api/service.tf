@@ -6,10 +6,10 @@ resource "aws_ecs_service" "produtos_api_service" {
   platform_version = "1.3.0"
   launch_type      = "FARGATE"
 
-  ordered_placement_strategy {
-    type  = "binpack"
-    field = "cpu"
-  }
+  # ordered_placement_strategy {
+  #   type  = "binpack"
+  #   field = "cpu"
+  # }
 
   load_balancer {
     target_group_arn = var.lb_target_group_arn
@@ -17,10 +17,10 @@ resource "aws_ecs_service" "produtos_api_service" {
     container_port   = 80
   }
 
-  placement_constraints {
-    type       = "memberOf"
-    expression = "attribute:ecs.availability-zone in [us-west-2a, us-west-2b]"
-  }
+  # placement_constraints {
+  #   type       = "memberOf"
+  #   expression = "attribute:ecs.availability-zone in [${join(", ", var.azs)}]"
+  # }
   
   network_configuration {
     security_groups  = [aws_security_group.produtos_api_ecs_security_group.id]
