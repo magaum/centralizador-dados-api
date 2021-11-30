@@ -7,6 +7,6 @@ cnpj,34,18,string
 tipo,52,14,string
 categoria,66,6,string
 status,72,11,string
-vencimento,83,10,date
+vencimento,83,10,string
 horaLimiteAplicacao,93,5,string
 liquidacao,98,4,string
