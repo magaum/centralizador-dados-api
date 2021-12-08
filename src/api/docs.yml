@@ -1,0 +1,290 @@
+openapi: 3.0.1
+info:
+  title: Documentação de Produtos
+  description: API para compartilhar dados de produtos
+  contact:
+    email: weslei.paula@fatec.sp.gov.br
+  version: 1.0.0
+
+tags:
+  - name: produto
+    description: Requisições de Produtos
+paths:
+  /produtos/{produtoId}:
+    get:
+      tags:
+        - produto
+      summary: Busca produto por Id 
+      description: Retorna um produto com seus atributos
+      operationId: buscaProdutoPorId
+      parameters:
+        - name: produtoId
+          in: path
+          description: ID do produto
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Produto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '400':
+          description: Invalid ID
+          content: {}
+        '404':
+          description: Produto not found
+          content: {}
+      security:
+        - api_key: []
+  /produtos/cnpj:
+    get:
+      tags:
+        - produto
+      summary: Busca produtos por cnpj
+      description: Varios parametros podem ser enviados via query string
+      operationId: buscaProdutosPorCnpj
+      parameters:
+        - name: cnpj
+          in: query
+          description: Identificador da empresa/fundo/gestor depende do produto
+          required: true
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+              default: 06.990.590/0001-23
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueryProduto'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueryProduto'
+        '400':
+          description: Invalid status value
+          content: {}
+  /produtos/codigo:
+    get:
+      tags:
+        - produto
+      summary: Busca produtos por codigo
+      description: Varios parametros podem ser enviados via query string
+      operationId: buscaProdutosPorCodigo
+      parameters:
+        - name: codigo
+          in: query
+          description: Codigo do produto utilizado internamente
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              default: 123
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueryProduto'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueryProduto'
+        '400':
+          description: Invalid status value
+          content: {}
+  /produtos/categoria:
+    get:
+      tags:
+        - produto
+      summary: Busca produtos por categoria
+      description: Varios parametros podem ser enviados via query string
+      operationId: buscaProdutosPorCategoria
+      parameters:
+        - name: categoria
+          in: query
+          description: Classificação do ativo
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - cdb
+                - acoes
+                - lci
+                - lca
+                - cri
+                - cra
+                - fundos
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueryProduto'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueryProduto'
+        '400':
+          description: Invalid status value
+          content: {}
+  /produtos/tipo:
+    get:
+      tags:
+        - produto
+      summary: Busca produtos pelo nome
+      description: Varios parametros podem ser enviados via query string
+      operationId: buscaProdutosPorNome
+      parameters:
+        - name: tipo
+          in: query
+          description: Tipo do produto
+          required: true
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - renda fixa
+                - renda variavel
+        - name: nome
+          in: query
+          description: Nome do produto
+          required: false
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+              default: CDB Banco exemplo
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueryProduto'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueryProduto'
+        '400':
+          description: Invalid status value
+          content: {}
+components:
+  schemas:
+    Produto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 12353
+          description: identificador do produto
+        nome:
+          type: string
+          example: Acao ordinaria banco exemplo
+          description: nome comercializavel
+        codigo:
+          type: string
+          example: 29484
+          description: Codigo interno
+        aplicacaoMinima:
+          type: string
+          example: "1000.00"
+          description: valor minimo para aporte
+        cnpj:
+          type: string
+          example: 06.990.590/0001-23
+          description: identificador da empresa/fundo/gestor depende do produto
+        tipo:
+          type: string
+          enum:
+            - renda fixa
+            - renda variavel
+          description: tipo do produto
+        categoria:
+          type: string
+          enum:
+            - cdb
+            - acoes
+            - lci
+            - lca
+            - cri
+            - cra
+            - fundos
+          description: categoria do produto
+        status:
+          type: string
+          enum:
+            - disponivel
+            - indisponivel
+          description: status do produto
+        vencimento:
+          type: string
+          example: 30-12-2021
+          description: data final em que novos aportes serao permitidos
+        horaLimiteAplicacao:
+          type: string
+          example: 17:00
+          description: horario limite para aplicação durante o dia
+        liquidacao:
+          type: string
+          example: D+1
+          description: prazo para liquidacao do resgate
+      xml:
+        name: Produto
+    QueryProduto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 12353
+          description: identificador do produto
+        nome:
+          type: string
+          example: Acao ordinaria banco exemplo
+          description: nome comercializavel
+        aplicacaoMinima:
+          type: string
+          example: "1000.00"
+          description: valor minimo para aporte
+      xml:
+        name: QueryProduto
+  securitySchemes:
+     api_key:
+      type: apiKey
+      name: api_key
+      in: header
