@@ -4,6 +4,8 @@ variable "ecr_glue_trigger_url" {}
 
 variable "env" {}
 
+variable "account_id" {}
+
 variable "region" {}
 
 variable "glue_workflow" {

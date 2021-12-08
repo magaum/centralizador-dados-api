@@ -1,5 +1,3 @@
-data "aws_caller_identity" "current" {}
-
 resource "aws_ecr_repository" "glue_trigger" {
   name                 = "glue-trigger"
   image_tag_mutability = "IMMUTABLE"
@@ -12,7 +10,7 @@ resource "aws_ecr_repository" "glue_trigger" {
 resource "null_resource" "ecr_login" {
   provisioner "local-exec" {
     command = <<EOF
-      aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com
+      aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${var.account_id}.dkr.ecr.${var.region}.amazonaws.com
     EOF
   }
 
