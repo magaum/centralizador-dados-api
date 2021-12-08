@@ -11,6 +11,8 @@ provider "aws" {
   region = var.region
 }
 
+data "aws_caller_identity" "current" {}
+
 module "network" {
   source = "./network"
 
@@ -20,10 +22,10 @@ module "network" {
 module "database" {
   source = "./database"
 
-  vpc_cidr            = module.network.vpc_cidr
-  vpc_id              = module.network.vpc_id
-  region              = var.region
-  env                 = var.env
+  vpc_cidr = module.network.vpc_cidr
+  vpc_id   = module.network.vpc_id
+  region   = var.region
+  env      = var.env
 }
 
 module "storage" {
