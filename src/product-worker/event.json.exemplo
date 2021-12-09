@@ -1,0 +1,23 @@
+{
+    "Records": [
+        {
+            "messageId": "messageId",
+            "receiptHandle": "receiptIdentification",
+            "body": "{\n  \"id\": \"4\",\n  \"nome\": \"teste2\",\n  \"codigo\": \"0\",\n  \"aplicacaoMinima\": \"50.00\",\n  \"cnpj\": \"06.990.590/0001-23\",\n  \"tipo\": \"renda variavel\",\n  \"categoria\": \"acoes\",\n  \"status\": \"disponivel\",\n  \"vencimento\": \"22-11-2030\",\n  \"horaLimiteAplicacao\": \"20:00\",\n  \"liquidacao\": \"D+0\"\n}",
+            "attributes": {
+                "ApproximateReceiveCount": "1",
+                "SentTimestamp": "1639016246151",
+                "SequenceNumber": "SequenceNumber",
+                "MessageGroupId": "1",
+                "SenderId": "account_id",
+                "MessageDeduplicationId": "1",
+                "ApproximateFirstReceiveTimestamp": "timestamp"
+            },
+            "messageAttributes": {},
+            "md5OfBody": "{{md5}}",
+            "eventSource": "aws:sqs",
+            "eventSourceARN": "arn:aws:sqs:us-east-1:account_id:produtos-api.fifo",
+            "awsRegion": "us-east-1"
+        }
+    ]
+}
